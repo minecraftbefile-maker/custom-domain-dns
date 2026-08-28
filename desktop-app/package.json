@@ -1,0 +1,44 @@
+{
+  "name": "custom-domain-dns-desktop",
+  "version": "1.0.0",
+  "description": "Desktop application for managing custom domains",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --debug",
+    "build": "electron-builder",
+    "build-win": "electron-builder --win",
+    "build-linux": "electron-builder --linux",
+    "build-mac": "electron-builder --mac"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "electron-store": "^8.1.0",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "electron": "^25.0.0",
+    "electron-builder": "^24.4.0"
+  },
+  "build": {
+    "appId": "com.customdomaindns.desktop",
+    "productName": "Custom Domain Linker",
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**",
+      "node_modules/**"
+    ],
+    "win": {
+      "target": ["nsis", "portable"],
+      "certificateFile": null
+    },
+    "linux": {
+      "target": ["AppImage", "deb"]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
