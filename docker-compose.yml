@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  custom-domain-dns:
+    build: .
+    container_name: custom-domain-dns
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
+      - "3000:3000"
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - DNS_PORT=53
+      - API_PORT=3000
+      - PROXY_PORT=8080
+      - BLOCKLIST_UPDATE_INTERVAL=24
+    volumes:
+      - domain-data:/app/data
+      - domain-logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - custom-dns
+
+  # Optional: pgAdmin for database management (if using PostgreSQL)
+  adminer:
+    image: adminer:latest
+    container_name: custom-domain-dns-admin
+    ports:
+      - "8081:8080"
+    environment:
+      - ADMINER_DEFAULT_SERVER=db
+    depends_on:
+      - custom-domain-dns
+    restart: unless-stopped
+    networks:
+      - custom-dns
+
+volumes:
+  domain-data:
+    driver: local
+  domain-logs:
+    driver: local
+
+networks:
+  custom-dns:
+    driver: bridge
